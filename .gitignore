@@ -1,4 +1,6 @@
-
-.idea/
 __pycache__/
-*.pyc
+log/
+logs/
+user_file/*
+.vscode/
+venv/
