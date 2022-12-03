@@ -4,3 +4,5 @@ logs/
 user_file/*
 .vscode/
 venv/
+cache/
+pgdata/

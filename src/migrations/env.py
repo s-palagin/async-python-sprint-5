@@ -65,9 +65,13 @@ async def run_migrations_online() -> None:
     sys_conn = await asyncpg.connect(
         database=db_name,
         user=app_settings.db_user,
-        password=app_settings.db_password
+        password=app_settings.db_password,
+        host=app_settings.db_host,
+        port=app_settings.db_port
     )
+        
     await sys_conn.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
+
     await sys_conn.close()
 
     connectable = AsyncEngine(

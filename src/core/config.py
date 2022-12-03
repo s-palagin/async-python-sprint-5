@@ -9,13 +9,17 @@ class AppSettings(BaseSettings):
     db_user: str = 'postgres'
     db_password: str = 'postgres'
     db_name: str = 'postgres'
+    db_host: str = 'postgres'
     db_port: int = 5432
 
-    project_host: str = '127.0.0.1'
+    re_host = 'cache'
+    re_port = 6379
+
+    project_host: str = '0.0.0.0'
     project_port: int = 8000
     database_dsn: str = (
         f'postgresql+asyncpg://{db_user}:{db_password}'
-        f'@{project_host}:{db_port}/{db_name}'
+        f'@{db_host}:{db_port}/{db_name}'
     )
     algorithm: str = "sha256"
     hmac_iteration = 10_000
@@ -23,7 +27,8 @@ class AppSettings(BaseSettings):
     file_folder = 'user_file'
     test_db_name = 'test_db'
     test_database: str = (
-        'postgresql+asyncpg://postgres:postgres@localhost:5432/test_db'
+        f'postgresql+asyncpg://{db_user}:{db_password}'
+        f'@{db_host}:{db_port}/{test_db_name}'
     )
     secret_key: str = (
         '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7'
@@ -35,4 +40,5 @@ class AppSettings(BaseSettings):
 
 app_settings = AppSettings()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-re_cli = redis.Redis()
+
+re_cli = redis.Redis(host=app_settings.re_host, port=app_settings.re_port)

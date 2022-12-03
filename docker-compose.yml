@@ -12,24 +12,32 @@ services:
       - ../2. Init Database:/docker-entrypoint-initdb.d
       - .:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5555:5432"
 
   cache:
     image: redis:6.2-alpine
     restart: always
     ports:
       - '6379:6379'
+    depends_on:
+      - postgres
     volumes: 
       - ./cache:/data
-  
+   
+  file-server:
+    image: file-server
+    build: .
+    env_file:
+      - ./.env
+    restart: 
+      always
+
+
   nginx:
-    image: nginx:latest
+    image: nginx:1.21.3-alpine
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - ./hosts:/etc/nginx/conf.d
-      - ./www:/var/www
-      - ./logs/nginx:/var/log/nginx  
-
-
+      - ./ngnix/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - file-server

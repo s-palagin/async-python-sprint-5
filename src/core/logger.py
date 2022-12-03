@@ -1,8 +1,8 @@
 import logging
 import os
 
-LOG_FILE = 'file_server_log.log'
-path = os.getcwd() + '/' + 'log'
+LOG_FILE = 'file-server_log.log'
+path = os.getcwd() + '/' + 'logs'
 try:
     os.mkdir(path)
 except FileExistsError:
