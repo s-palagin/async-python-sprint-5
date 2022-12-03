@@ -33,3 +33,9 @@ class File(FileInDBBase):
 
 class FileInDB(FileInDBBase):
     pass
+
+
+class UploadResponse(BaseModel):
+    Ready: Optional[str] = None
+    Size: Optional[str] = None
+    Error: Optional[str] = None

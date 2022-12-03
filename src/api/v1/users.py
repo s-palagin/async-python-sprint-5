@@ -16,6 +16,7 @@ router = APIRouter()
 
 @router.post(
     '/register',
+    description='New user registration.',
     status_code=status.HTTP_201_CREATED,
     response_model=schema.UserBase
 )
@@ -29,6 +30,7 @@ async def register_user(
 
 @router.post(
     '/auth',
+    description='Get token.',
     status_code=status.HTTP_201_CREATED,
     response_model=schema.UserToken
 )
@@ -53,7 +55,10 @@ async def auth(
     return schema.UserToken(access_token=token.token, expires=token.expires)
 
 
-@router.get("/me", response_model=schema.UserBase)
+@router.get(
+    '/me',
+    response_model=schema.UserBase,
+    description='Get current user')
 async def read_users_me(
     current_user=Depends(get_current_user)
 ) -> schema.UserBase:

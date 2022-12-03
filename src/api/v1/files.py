@@ -3,19 +3,20 @@ import time
 from fastapi import APIRouter, Depends, File, UploadFile, status
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.ext.sqlalchemy import AbstractPage
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import re_cli
 from db.db import get_session
 from models.users import UsersTable as User
-from schemas.files import FileInDB
+from schemas.files import FileInDB, UploadResponse
 from services.files import files_crud
 from services.users import get_current_user
 
 router = APIRouter()
 
 
-@router.get('/ping')
+@router.get('/ping', description='Checks the availability of services.')
 async def get_ping(
         db: AsyncSession = Depends(get_session),
         user: User = Depends(get_current_user),
@@ -33,7 +34,11 @@ async def get_ping(
     }
 
 
-@router.get('/list', response_model=Page[FileInDB])
+@router.get(
+    '/list',
+    response_model=Page[FileInDB],
+    description='Get user file list.'
+)
 async def get_files_list(
         db: AsyncSession = Depends(get_session),
         user: User = Depends(get_current_user),
@@ -42,26 +47,36 @@ async def get_files_list(
     return paginate(files)
 
 
-@router.post('/upload', status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/upload',
+    status_code=status.HTTP_201_CREATED,
+    description='Upload user file.',
+    response_model=UploadResponse,
+    response_model_exclude_unset=True
+)
 async def upload_file(
     path: str,
     db: AsyncSession = Depends(get_session),
     user: User = Depends(get_current_user),
     file: UploadFile = File(),
-) -> File:
+) -> UploadResponse:
     file_upload = await files_crud.create(
         db=db, file=file, user=user, path=path)
-    return file_upload
+    return UploadResponse(**file_upload)
 
 
-@router.get('/download/')
+@router.get(
+    '/download',
+    description='Download user file.',
+    response_class=FileResponse
+)
 async def download_file(
         *,
         db: AsyncSession = Depends(get_session),
         user: User = Depends(get_current_user),
         identifier: str | int = None,
         download_folder: bool = False,
-) -> File:
+) -> FileResponse:
     if download_folder:
         file = await files_crud.download_folder(user=user, path=identifier)
     else:

@@ -8,6 +8,7 @@ from sqlalchemy import (
     text
 )
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from db.db import Base
 
@@ -22,6 +23,12 @@ class UsersTable(Base):
         default=True,
         nullable=False,
     )
+    tokens = relationship(
+        'TokensTable', back_populates="user", passive_deletes=True
+    )
+    files = relationship(
+        'FileModel', back_populates="user", passive_deletes=True
+    )
 
 
 class TokensTable(Base):
@@ -35,4 +42,7 @@ class TokensTable(Base):
         index=True,
     )
     expires = Column(DateTime())
-    user_id = Column(ForeignKey("users.id", ondelete="CASCADE"))
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    user = relationship('UsersTable', back_populates='tokens')

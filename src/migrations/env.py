@@ -69,7 +69,7 @@ async def run_migrations_online() -> None:
         host=app_settings.db_host,
         port=app_settings.db_port
     )
-        
+
     await sys_conn.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
 
     await sys_conn.close()

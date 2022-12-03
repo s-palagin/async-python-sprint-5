@@ -6,3 +6,5 @@ user_file/*
 venv/
 cache/
 pgdata/
+.env
+hosts/

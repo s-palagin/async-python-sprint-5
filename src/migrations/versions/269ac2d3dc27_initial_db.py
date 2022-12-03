@@ -1,8 +1,8 @@
-"""Added required tables
+"""initial-db
 
-Revision ID: 3250619a25a6
-Revises: c2017535223b
-Create Date: 2022-11-29 00:30:56.475606
+Revision ID: 269ac2d3dc27
+Revises: 
+Create Date: 2022-12-04 00:42:44.154288
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '3250619a25a6'
-down_revision = 'c2017535223b'
+revision = '269ac2d3dc27'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -30,10 +30,10 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('path', sa.String(), nullable=True),
+    sa.Column('path', sa.String(length=100), nullable=True),
     sa.Column('size', sa.Integer(), nullable=True),
     sa.Column('is_downloadable', sa.Boolean(), nullable=True),
-    sa.Column('author', sa.Integer(), nullable=True),
+    sa.Column('author', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['author'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -42,7 +42,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('token', postgresql.UUID(), server_default=sa.text('uuid_generate_v4()'), nullable=False),
     sa.Column('expires', sa.DateTime(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
