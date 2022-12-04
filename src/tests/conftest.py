@@ -11,6 +11,8 @@ from sqlalchemy.orm import sessionmaker
 from db.db import Base, engine
 from main import app
 
+from .mocks import BASE_URL
+
 
 @pytest.fixture(scope="session")
 def event_loop(request) -> Generator:
@@ -23,7 +25,7 @@ def event_loop(request) -> Generator:
 async def client() -> AsyncGenerator:
     async with AsyncClient(
         app=app,
-        base_url='http://127.0.0.1/api/v1'
+        base_url=BASE_URL
     ) as client:
         yield client
 
@@ -48,7 +50,6 @@ async def async_session() -> AsyncGenerator:
                 host='127.0.0.1',
                 port=5555
             )
-#
             await sys_conn.execute(
                 f'CREATE DATABASE "{database}" OWNER "{user}"'
             )

@@ -1,4 +1,4 @@
-BASE_URL = 'http://localhost'
+BASE_URL = 'http://127.0.0.1/api/v1'
 
 
 class CustomTestUser():
