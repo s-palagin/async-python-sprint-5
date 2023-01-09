@@ -9,7 +9,6 @@ API-сервис для хранения файлов.
     - Redis
     - FastApi
 
-Документация к API доступна по адресу: http://fastapifileserver.ddns.net/api/openapi
 
 # Проектное задание пятого спринта
 
